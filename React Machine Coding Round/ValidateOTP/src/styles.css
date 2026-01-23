@@ -1,0 +1,19 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.otp-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+.otp-input {
+  height: 50px;
+  width: 50px;
+  font-size: 14px;
+  text-align: center;
+  margin: 5px;
+}

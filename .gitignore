@@ -1,0 +1,23 @@
+# Namaste React folder
+Namaste React/
+
+# PDF files
+Front-End Interview Guide.pdf
+Fullstack Engineer Interview Guide.pdf
+
+# Node modules and dependencies
+node_modules/
+.env
+.env.local
+.DS_Store
+
+# Build outputs
+build/
+dist/
+.next/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
