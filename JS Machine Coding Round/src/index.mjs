@@ -101,3 +101,29 @@ Array.prototype.myReduce = function (callbackFn, initialValue) {
   }
   return accumulator;
 };
+
+export class EventEmitter {
+  constructor() {
+    // We will use Object.create(null) to avoid prototype pollution
+    this.events = Object.create(null);
+  }
+  on(event, listener) {
+    if (!this.events[event]) {
+      this.events[event] = [];
+    }
+    this.events[event].push(listener);
+    return this;
+  }
+  off(event, listener) {
+    if (!this.events[event]) return this;
+    this.events[event] = this.events[event].filter((l) => l !== listener);
+    return this;
+  }
+  emit(event, ...args) {
+    if (!this.events[event]) return false;
+    this.events[event].forEach((listener) => {
+      listener.apply(this, args);
+    });
+    return true;
+  }
+}
