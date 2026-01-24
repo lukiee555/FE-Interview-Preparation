@@ -127,3 +127,31 @@ export class EventEmitter {
     return true;
   }
 }
+
+export class EventEmitter2 {
+  constructor() {
+    this.events = Object.create(null);
+    this.key = 0;
+  }
+
+  on(event, listener) {
+    if (!this.events[event]) {
+      this.events[event] = {};
+    }
+    const id = this.key;
+    this.events[event][id] = listener;
+    this.key += 1;
+    return {
+      off: () => {
+        delete this.events[event][id];
+      },
+    };
+  }
+  emit(event, ...args) {
+    if (!this.events[event]) return false;
+    Object.values(this.events[event]).forEach((listener) => {
+      listener.apply(this, args);
+    });
+    return true;
+  }
+}
