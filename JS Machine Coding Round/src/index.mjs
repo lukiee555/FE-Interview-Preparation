@@ -76,3 +76,28 @@ Array.prototype.myMap = function (callbackFn, thisArg) {
   }
   return resultArray;
 };
+
+Array.prototype.myReduce = function (callbackFn, initialValue) {
+  if (
+    typeof callbackFn !== "function" ||
+    !callbackFn.call ||
+    !callbackFn.apply
+  ) {
+    throw new TypeError(`${callbackFn} is not a function`);
+  }
+  const thisArray = this;
+  const noInitialValue = initialValue === undefined;
+  const len = thisArray.length;
+  let accumulator = noInitialValue ? thisArray[0] : initialValue;
+  let startIndex = noInitialValue ? 1 : 0;
+  if (noInitialValue && len === 0) {
+    throw new TypeError("Reduce of empty array with no initial value");
+  }
+  for (let i = startIndex; i < len; i++) {
+    if (i in thisArray) {
+      const element = thisArray[i];
+      accumulator = callbackFn(accumulator, element, i, thisArray);
+    }
+  }
+  return accumulator;
+};
