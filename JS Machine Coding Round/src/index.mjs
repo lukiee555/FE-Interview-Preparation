@@ -155,3 +155,23 @@ export class EventEmitter2 {
     return true;
   }
 }
+
+export function findIndex(array, predicate, fromIndex = 0) {
+  const length = array.length;
+  const startIndex =
+    fromIndex >= 0 ? fromIndex : Math.max(length + fromIndex, 0);
+  for (let index = startIndex; index < length; index++) {
+    if (predicate(array[index], index, array)) return index;
+  }
+  return -1;
+}
+
+export function findLastIndex(array, predicate, fromIndex = array.length - 1) {
+  const length = array.length;
+  const startIndex =
+    fromIndex >= 0 ? Math.min(fromIndex, length - 1) : length + fromIndex;
+  for (let index = startIndex; index >= 0; index--) {
+    if (predicate(array[index], index, array)) return index;
+  }
+  return -1;
+}
