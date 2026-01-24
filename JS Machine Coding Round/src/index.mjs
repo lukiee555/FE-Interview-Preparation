@@ -37,3 +37,21 @@ Array.prototype.myConcat = function (...items) {
 
   return A;
 };
+Array.prototype.myFilter = function (callbackFn, thisArg) {
+    if(typeof callbackFn !== 'function') {
+        throw new TypeError(`${callbackFn} is not a function`);
+    }
+    const thisArray = this;
+    const resultArray = [];
+    const len = thisArray.length;
+
+    for(let i = 0; i < len; i++) {
+        if(i in thisArray) {
+            const element = thisArray[i];
+            if(callbackFn.call(thisArg, element, i, thisArray)) {
+                resultArray.push(element);
+            }
+        }
+    }
+    return resultArray;
+ }
