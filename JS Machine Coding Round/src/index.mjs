@@ -166,12 +166,48 @@ export function findIndex(array, predicate, fromIndex = 0) {
   return -1;
 }
 
-export function findLastIndex(array, predicate, fromIndex = array.length - 1) {
-  const length = array.length;
-  const startIndex =
-    fromIndex >= 0 ? Math.min(fromIndex, length - 1) : length + fromIndex;
-  for (let index = startIndex; index >= 0; index--) {
-    if (predicate(array[index], index, array)) return index;
+export default function findLastIndex(
+  array,
+  predicate,
+  fromIndex = array.length - 1,
+) {
+  let startIndex =
+    fromIndex < 0
+      ? Math.max(array.length + fromIndex, 0)
+      : Math.min(fromIndex, array.length - 1);
+
+  let index = startIndex;
+  // Iterate from the right.
+  while (index >= 0) {
+    if (predicate(array[index], index, array)) {
+      return index;
+    }
+    index--;
   }
+
   return -1;
+}
+export function flatter(array) {
+  const result = [];
+
+  array.forEach((item) => {
+    if (Array.isArray(item)) {
+      const flatItem = flatter(item);
+      result.push(...flatItem);
+    } else {
+      result.push(item);
+    }
+  });
+
+  return result;
+}
+
+export function chunk(array, size) {
+  if (size <= 0) throw new Error("Chunk size must be greater than 0");
+  const result = [];
+  for (let i = 0; i < array.length; i += size) {
+    const chunk = array.slice(i, i + size);
+    result.push(chunk);
+  }
+  return result;
 }
