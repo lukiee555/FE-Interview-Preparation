@@ -233,3 +233,87 @@ Function.prototype.myCall = function (thisArg, ...args) {
   const fn = this;
   return fn.apply(thisArg, args);
 };
+
+export function getElementsByClassName(element, classNames) {
+  const result = [];
+  const classListSet = new Set(classNames.trim().split(/\s+/));
+  function traverse(el) {
+    if (el == null) return;
+    if (Array.from(classListSet).every((cls) => el.classList.contains(cls))) {
+      result.push(el);
+    }
+    for (const child of el.children) {
+      traverse(child);
+    }
+  }
+  for (const child of element.children) {
+    traverse(child);
+  }
+  return result;
+}
+
+export function getElementsByTagName(element, tagName) {
+  const result = [];
+  const targetTagName = tagName.toUpperCase();
+  function traverse(el) {
+    if (el == null) return;
+    if (el.tagName.toUpperCase() === targetTagName) {
+      result.push(el);
+    }
+    for (const child of el.children) {
+      traverse(child);
+    }
+  }
+  for (const child of element.children) {
+    traverse(child);
+  }
+  return result;
+}
+/**
+ * Algorithm: Hierarchical Tag Search
+
+Convert input tag string into uppercase tag array
+
+Initialize empty result list
+
+Define recursive function traverse(node, index)
+
+If node is null → return
+
+If node tag matches tagArray[index]:
+
+If index is last tag → add node to result
+
+Else increment index
+
+For each child of node → call traverse(child, updatedIndex)
+
+Start traversal from document.body with index = 0
+
+Return result list
+ */
+
+export function getElementsByTagNameHierarchy(document, tagNames) {
+  const results = [];
+  const tagArray = tagNames.toUpperCase().trim().split(/\s+/);
+  if (tagArray.length === 0) return results;
+  const lastIndex = tagArray.length - 1;
+  function dfs(element, index) {
+    if (element === null) return;
+
+    const currentTag = tagArray[index];
+    const elementMatches = element.tagName === currentTag;
+    const isLastTag = index === lastIndex;
+
+    if (elementMatches && isLastTag) {
+      results.push(element);
+    }
+
+    const nextIndex = elementMatches ? Math.min(index + 1, lastIndex) : index;
+    for (const child of element.children) {
+      dfs(child, nextIndex);
+    }
+  }
+  dfs(document.body, 0);
+  return results;
+}
