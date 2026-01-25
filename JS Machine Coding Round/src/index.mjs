@@ -211,3 +211,13 @@ export function chunk(array, size) {
   }
   return result;
 }
+
+Function.prototype.myApply = function (thisArg, argArray = []) {
+  return this.bind(thisArg)(...argArray);
+};
+Function.prototype.myApply = function (thisArg, argArray = []) {
+  return this.bind(thisArg, ...argArray)();
+};
+Function.prototype.myApply = function (thisArg, argArray = []) {
+  return this.call(thisArg, ...argArray);
+};
