@@ -342,3 +342,128 @@ export function jsonStringify(value) {
   }
   return undefined; // Functions and undefined are not serialized
 }
+
+export function promiseAll(promises) {
+  return new Promise((resolve, reject) => {
+    const results = [];
+    let completedCount = 0;
+    const total = promises.length;
+
+    if (total === 0) {
+      resolve(results);
+      return;
+    }
+
+    promises.forEach((promise, index) => {
+      Promise.resolve(promise)
+        .then((value) => {
+          results[index] = value;
+          completedCount += 1;
+          if (completedCount === total) {
+            resolve(results);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  });
+}
+
+export function promiseAllSettled(promises) {
+  return new Promise((resolve) => {
+    const results = [];
+    let settledCount = 0;
+    const total = promises.length;
+
+    if (total === 0) {
+      resolve(results);
+      return;
+    }
+
+    promises.forEach((promise, index) => {
+      Promise.resolve(promise)
+        .then((value) => {
+          results[index] = { status: "fulfilled", value: value };
+        })
+        .catch((reason) => {
+          results[index] = { status: "rejected", reason: reason };
+        })
+        .finally(() => {
+          settledCount += 1;
+          if (settledCount === total) {
+            resolve(results);
+          }
+        });
+    });
+  });
+}
+
+export function promiseAny(promises) {
+  return new Promise((resolve, reject) => {
+    const errors = [];
+    let rejectedCount = 0;
+    const total = promises.length;
+    if (total === 0) {
+      reject(new AggregateError([], "All promises were rejected"));
+      return;
+    }
+    promises.forEach((promise, index) => {
+      Promise.resolve(promise)
+        .then((value) => {
+          resolve(value);
+        })
+        .catch((error) => {
+          errors[index] = error;
+          rejectedCount += 1;
+          if (rejectedCount === total) {
+            reject(new AggregateError(errors, "All promises were rejected"));
+          }
+        });
+    });
+  });
+}
+
+export function promiseRace(promises) {
+  return new Promise((resolve, reject) => {
+    promises.forEach((promise) => {
+      Promise.resolve(promise)
+        .then((value) => {
+          resolve(value);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  });
+}
+export function promiseReject(reason) {
+  return new Promise((_, reject) => {
+    reject(reason);
+  });
+}
+
+export function promiseResolve(value) {
+  if (value instanceof Promise) {
+    return value;
+  }
+  if (value.then && typeof value.then === "function") {
+    return new Promise(value.then.bind(value));
+  }
+  return new Promise((resolve) => {
+    resolve(value);
+  });
+}
+
+export function promiseResolver() {
+  let resolveFn, rejectFn;
+  const promise = new Promise((resolve, reject) => {
+    resolveFn = resolve;
+    rejectFn = reject;
+  });
+  return {
+    promise,
+    resolve: resolveFn,
+    reject: rejectFn,
+  };
+}
