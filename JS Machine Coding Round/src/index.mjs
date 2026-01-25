@@ -228,3 +228,8 @@ Function.prototype.myBind = function (thisArg, ...args) {
     return fn.apply(thisArg, [...args, ...innerArgs]);
   };
 };
+
+Function.prototype.myCall = function (thisArg, ...args) {
+  const fn = this;
+  return fn.apply(thisArg, args);
+};
