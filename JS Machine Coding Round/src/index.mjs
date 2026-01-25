@@ -221,3 +221,10 @@ Function.prototype.myApply = function (thisArg, argArray = []) {
 Function.prototype.myApply = function (thisArg, argArray = []) {
   return this.call(thisArg, ...argArray);
 };
+
+Function.prototype.myBind = function (thisArg, ...args) {
+  const fn = this;
+  return function (...innerArgs) {
+    return fn.apply(thisArg, [...args, ...innerArgs]);
+  };
+};
