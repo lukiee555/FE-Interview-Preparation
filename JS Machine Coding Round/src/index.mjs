@@ -317,3 +317,28 @@ export function getElementsByTagNameHierarchy(document, tagNames) {
   dfs(document.body, 0);
   return results;
 }
+
+export function jsonStringify(value) {
+  if (value === null) return "null";
+  if (typeof value === "number" || typeof value === "boolean") {
+    return value.toString();
+  }
+  if (typeof value === "string") {
+    return `"${value.replace(/"/g, '\\"')}"`;
+  }
+  if (Array.isArray(value)) {
+    const elements = value.map((el) => jsonStringify(el) || "null");
+    return `[${elements.join(",")}]`;
+  }
+  if (typeof value === "object") {
+    const entries = Object.entries(value)
+      .map(([key, val]) => {
+        const stringifiedVal = jsonStringify(val);
+        if (stringifiedVal === undefined) return undefined;
+        return `"${key.replace(/"/g, '\\"')}":${stringifiedVal}`;
+      })
+      .filter((entry) => entry !== undefined);
+    return `{${entries.join(",")}}`;
+  }
+  return undefined; // Functions and undefined are not serialized
+}
