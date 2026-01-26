@@ -467,3 +467,45 @@ export function promiseResolver() {
     reject: rejectFn,
   };
 }
+
+export function getElementByStyle(element, property, value) {
+  const elements = [];
+  function traverse(el) {
+    if (el == null) return;
+    const computedStyle = window.getComputedStyle(el);
+    if (computedStyle.getPropertyValue(property) === value) {
+      elements.push(el);
+    }
+    for (const child of el.children) {
+      traverse(child);
+    }
+  }
+  for (const child of element.children) {
+    traverse(child);
+  }
+  return elements;
+}
+
+export function serializeHTML(element, indent = "\t") {
+  function traverse(element, depth = 0) {
+    if (typeof element === "string") {
+      return `${indent.repeat(depth)}${element}`;
+    }
+    const tagName = element.tagName.toLowerCase();
+    const attrs = Array.from(element.attributes)
+      .map((attr) => `${attr.name}="${attr.value}"`)
+      .join(" ");
+    const openingTag = attrs ? `<${tagName} ${attrs}>` : `<${tagName}>`;
+    const closingTag = `</${tagName}>`;
+
+    let result = `${indent.repeat(depth)}${openingTag}\n`;
+
+    for (const child of element.childNodes) {
+      result += traverse(child, depth + 1) + "\n";
+    }
+
+    result += `${indent.repeat(depth)}${closingTag}`;
+    return result;
+  }
+  return traverse(element);
+}
