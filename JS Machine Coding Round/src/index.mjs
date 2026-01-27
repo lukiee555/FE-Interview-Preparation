@@ -509,3 +509,24 @@ export function serializeHTML(element, indent = "\t") {
   }
   return traverse(element);
 }
+export function classNames(...args) {
+  const classes = [];
+
+  args.forEach((arg) => {
+    if (!arg) return;
+
+    if (typeof arg === "string" || typeof arg === "number") {
+      classes.push(arg);
+    } else if (Array.isArray(arg)) {
+      classes.push(classNames(...arg));
+    } else if (typeof arg === "object") {
+      Object.entries(arg).forEach(([key, value]) => {
+        if (value) {
+          classes.push(key);
+        }
+      });
+    }
+  });
+
+  return classes.join(" ");
+}
