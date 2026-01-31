@@ -86,3 +86,18 @@ bus.publish("USER_LOGIN", { id: 1, name: "Alex" });
 unsubscribeAnalytics();
 
 bus.publish("USER_LOGIN", { id: 2, name: "Sam" });
+
+// Create Once
+
+function createOnce(fn) {
+  let called = false;
+  let result;
+
+  return function (...args) {
+    if (!called) {
+      called = true;
+      result = fn.apply(this, args);
+    }
+    return result;
+  };
+}
