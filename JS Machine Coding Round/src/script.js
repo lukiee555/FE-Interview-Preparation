@@ -88,7 +88,6 @@ unsubscribeAnalytics();
 bus.publish("USER_LOGIN", { id: 2, name: "Sam" });
 
 // Create Once
-
 function createOnce(fn) {
   let called = false;
   let result;
