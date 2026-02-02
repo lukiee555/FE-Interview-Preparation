@@ -530,3 +530,21 @@ export function classNames(...args) {
 
   return classes.join(" ");
 }
+
+export function deepClone(value) {
+  if (value === null || typeof value !== "object") {
+    return value;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map(deepClone);
+  }
+
+  const clonedObj = {};
+  for (const key in value) {
+    if (Object.hasOwn(value, key)) {
+      clonedObj[key] = deepClone(value[key]);
+    }
+  }
+  return clonedObj;
+}
