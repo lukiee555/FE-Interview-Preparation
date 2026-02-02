@@ -553,7 +553,7 @@ const SEPARATOR = ", ";
 const OTHERS_SEPARATOR = " and ";
 const OTHERS_LABEL = "other";
 export function listFormat(items, options) {
-  // Filter falsey values.
+  // Filter values.
   let items = itemsParam.filter((item) => !!item);
 
   if (!items || items.length === 0) {
@@ -585,4 +585,30 @@ export function listFormat(items, options) {
   const firstSection = items.slice(0, items.length - 1).join(SEPARATOR);
   const secondSection = items[items.length - 1];
   return [firstSection, secondSection].join(OTHERS_SEPARATOR);
+}
+
+export function mapAsync(iterable, callbackFn) {
+  return Promise.all(iterable.map(callbackFn));
+}
+
+//Approach-2
+export function mapAsync(iterable, callbackFn) {
+  const results = [];
+  const unresolved = iterable.length;
+  if (unresolved === 0) {
+    return Promise.resolve(results);
+  }
+  iterable.forEach((item, index) => {
+    callbackFn(item)
+      .then((result) => {
+        results[index] = result;
+        unresolved -= 1;
+        if (unresolved === 0) {
+          resolve(results);
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
 }
