@@ -1,0 +1,28 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+.boxes {
+  padding: 50px;
+}
+.row {
+  display: flex;
+  gap: 20px;
+  padding-bottom: 20px;
+  width: max-content;
+}
+.row:last-child {
+  padding-bottom: 0;
+}
+.box {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid black;
+  cursor: pointer;
+}
+.box-placeholder {
+  width: 2rem;
+}
+.box.selected {
+  background-color: green;
+}
